@@ -52,10 +52,26 @@ $current_filename = substr($current_filename, (strrpos($current_filename, "/") +
 		<?php do_action( 'emr_before_replace_type_options' ); ?>
 
 	<?php if ( apply_filters( 'emr_display_replace_type_options', true ) ) : ?>
-		<p><?php echo __("Select media replacement type:", "enable-media-replace"); ?></p>
+		<h3><?php echo __("Select media replacement type:", "enable-media-replace"); ?></h3>
 
 		<label for="replace_type_1"><input CHECKED id="replace_type_1" type="radio" name="replace_type" value="replace"> <?php echo __("Just replace the file", "enable-media-replace"); ?></label>
 		<p class="howto"><?php echo __("Note: This option requires you to upload a file of the same type (", "enable-media-replace"); ?><?php echo $current_filetype; ?><?php echo __(") as the one you are replacing. The name of the attachment will stay the same (", "enable-media-replace"); ?><?php echo $current_filename; ?><?php echo __(") no matter what the file you upload is called.", "enable-media-replace"); ?></p>
+
+		<label for="replace_type_3"><input id="replace_type_3" type="radio" name="replace_type" value="replace_thumb"> <?php echo __("Replace individual thumbnail:", "enable-media-replace"); ?></label>
+<?php $image_sizes = get_intermediate_image_sizes(); ?>
+		<select name="image_size">
+<?php 
+	foreach ($image_sizes as $size_name): 
+	$width = get_option( $size_name . '_size_w' );
+    $height = get_option( $size_name . '_size_h' );
+?>
+    		<option value="<?php echo ($width.'x'.$height) ?>"><?php echo ($size_name.' ('.$width.' x '.$height.')') ?></option>
+<?php endforeach; ?>
+		</select>
+<?php  
+	//var_dump( $sizes ); //debug
+?>
+		<p class="howto"><?php echo __("Note: This option requires you to upload a file of the same type (", "enable-media-replace"); ?><?php echo $current_filetype; ?><?php echo __(") and size as the one you are replacing. The name of the attachment will stay the same no matter what the file you upload is called.", "enable-media-replace"); ?></p>
 
 		<?php if ( apply_filters( 'emr_enable_replace_and_search', true ) ) : ?>
 		<label for="replace_type_2"><input id="replace_type_2" type="radio" name="replace_type" value="replace_and_search"> <?php echo __("Replace the file, use new file name and update all links", "enable-media-replace"); ?></label>
