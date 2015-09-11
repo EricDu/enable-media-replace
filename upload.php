@@ -137,8 +137,9 @@ if (is_uploaded_file($_FILES["userfile"]["tmp_name"])) {
 	} elseif ($replace_type == "replace_thumb") {
 		// define filename
 		$image_size = $_POST["image_size"];
-		$extension_pos = strrpos($current_filename, '.');
-		$current_thumb = substr($current_filename, 0, $extension_pos) . '-'.$image_size . substr($current_filename, $extension_pos);
+		//$extension_pos = strrpos($current_filename, '.');
+		//$current_thumb = substr($current_filename, 0, $extension_pos) . '-'.$image_size . substr($current_filename, $extension_pos);
+		$current_thumb = $image_size;
 		$current_thumb_path = $current_path.'/'.$current_thumb;
 		error_log ('thumbnail = '.$current_thumb); //debug
 		error_log ('thumbnail path = '.$current_thumb_path); //debug
