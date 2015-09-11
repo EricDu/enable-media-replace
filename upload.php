@@ -58,6 +58,31 @@ function emr_delete_current_files($current_file) {
 
 }
 
+function emr_delete_thumbnail($current_thumb) {
+	// Delete old file
+
+	// Find path of current file
+	$current_path = substr($current_thumb, 0, (strrpos($current_thumb, "/")));
+	
+	// Check if old file exists first
+	if (file_exists($current_thumb)) {
+		error_log ('file exists'); //debug
+		// Now check for correct file permissions for old file
+		clearstatcache();
+		if (is_writable($current_thumb)) {
+			error_log ('file is writable'); //debug
+			// Everything OK; delete the file
+			unlink($current_thumb);
+			error_log ('file is deleted'); //debug
+		}
+		else {
+			// File exists, but has wrong permissions. Let the user know.
+			printf(__('The file %1$s can not be deleted by the web server, most likely because the permissions on the file are wrong.', "enable-media-replace"), $current_thumb);
+			exit;	
+		}
+	}
+	
+}
 
 // Get old guid and filetype from DB
 $sql = "SELECT guid, post_mime_type FROM $table_name WHERE ID = '" . (int) $_POST["ID"] . "'";
@@ -73,7 +98,7 @@ $current_file = str_replace("//", "/", $current_file);
 $current_filename = basename($current_file);
 
 $replace_type = $_POST["replace_type"];
-// We have two types: replace / replace_and_search
+// We have three types: replace / replace_and_search / replace_thumb
 
 if (is_uploaded_file($_FILES["userfile"]["tmp_name"])) {
 
@@ -109,6 +134,21 @@ if (is_uploaded_file($_FILES["userfile"]["tmp_name"])) {
 
 		// Trigger possible updates on CDN and other plugins 
 		update_attached_file( (int) $_POST["ID"], $current_file);
+	} elseif ($replace_type == "replace_thumb") {
+		// define filename
+		$image_size = $_POST["image_size"];
+		$extension_pos = strrpos($current_filename, '.');
+		$current_thumb = substr($current_filename, 0, $extension_pos) . '-'.$image_size . substr($current_filename, $extension_pos);
+		$current_thumb_path = $current_path.'/'.$current_thumb;
+		error_log ('thumbnail = '.$current_thumb); //debug
+		error_log ('thumbnail path = '.$current_thumb_path); //debug
+		// delete thumbnail
+		emr_delete_thumbnail($current_thumb_path);
+		// Move new file to old location/name
+		move_uploaded_file($_FILES["userfile"]["tmp_name"], $current_thumb_path);
+		// Chmod new file to original file permissions
+		@chmod($current_thumb_path, $original_file_perms);
+		
 	} elseif ( 'replace_and_search' == $replace_type && apply_filters( 'emr_enable_replace_and_search', true ) ) {
 		// Replace file, replace file name, update meta data, replace links pointing to old file name
 
