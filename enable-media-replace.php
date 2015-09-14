@@ -63,7 +63,7 @@ function enable_media_replace( $form_fields, $post ) {
 		$editurl = str_replace("http:", "https:", $editurl);
 	}
 	$link = "href=\"$editurl\"";
-	$form_fields["enable-media-replace"] = array("label" => __("Replace media", "enable-media-replace"), "input" => "html", "html" => "<p><a class='button-secondary'$link>" . __("Upload a new file", "enable-media-replace") . "</a></p>", "helps" => __("To replace the current file, click the link and upload a replacement.", "enable-media-replace"));
+	$form_fields["enable-media-replace"] = array("label" => __("Replace Media", "enable-media-replace"), "input" => "html", "html" => "<p><a class='button-secondary'$link>" . __("Upload a new file", "enable-media-replace") . "</a></p>", "helps" => __("To replace this file, click the button and upload a replacement.", "enable-media-replace"));
 
 	return $form_fields;
 }
