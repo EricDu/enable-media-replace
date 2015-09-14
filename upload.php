@@ -66,14 +66,14 @@ function emr_delete_thumbnail($current_thumb) {
 	
 	// Check if old file exists first
 	if (file_exists($current_thumb)) {
-		error_log ('file exists'); //debug
+		//error_log ('file exists'); //debug
 		// Now check for correct file permissions for old file
 		clearstatcache();
 		if (is_writable($current_thumb)) {
-			error_log ('file is writable'); //debug
+			//error_log ('file is writable'); //debug
 			// Everything OK; delete the file
 			unlink($current_thumb);
-			error_log ('file is deleted'); //debug
+			//error_log ('file is deleted'); //debug
 		}
 		else {
 			// File exists, but has wrong permissions. Let the user know.
@@ -141,8 +141,8 @@ if (is_uploaded_file($_FILES["userfile"]["tmp_name"])) {
 		//$current_thumb = substr($current_filename, 0, $extension_pos) . '-'.$image_size . substr($current_filename, $extension_pos);
 		$current_thumb = $image_size;
 		$current_thumb_path = $current_path.'/'.$current_thumb;
-		error_log ('thumbnail = '.$current_thumb); //debug
-		error_log ('thumbnail path = '.$current_thumb_path); //debug
+		//error_log ('thumbnail = '.$current_thumb); //debug
+		//error_log ('thumbnail path = '.$current_thumb_path); //debug
 		// delete thumbnail
 		emr_delete_thumbnail($current_thumb_path);
 		// Move new file to old location/name
