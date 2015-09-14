@@ -53,6 +53,11 @@ $current_filename = substr($current_filename, (strrpos($current_filename, "/") +
 			<label for="replace_type_1"><input CHECKED id="replace_type_1" type="radio" name="replace_type" value="replace"> <?php echo __("Replace the file, keep old file name", "enable-media-replace"); ?></label>
 		</p>
 
+		<?php if ( apply_filters( 'emr_enable_replace_and_search', true ) ) : ?>
+		<p>
+			<label for="replace_type_3"><input id="replace_type_3" type="radio" name="replace_type" value="replace_and_search"> <?php echo __("Replace the file, use new file name and update links", "enable-media-replace"); ?></label>
+		</p>		
+		<?php endif; ?>
 
 <?php 
 	$suffix = substr($current_filename, (strlen($current_filename)-4));
@@ -60,7 +65,7 @@ $current_filename = substr($current_filename, (strrpos($current_filename, "/") +
 	if (in_array($suffix, $imgAr)) : 
 ?>
 		<p>
-			<label for="replace_type_2"><input id="replace_type_2" type="radio" name="replace_type" value="replace_thumb"> <?php echo __("Replace a thumbnail", "enable-media-replace"); ?>:</label>
+			<label for="replace_type_2"><input id="replace_type_2" type="radio" name="replace_type" value="replace_thumb"> <?php echo __("Replace selected thumbnail only", "enable-media-replace"); ?>:</label>
 <?php 
 	$metadata = wp_get_attachment_metadata($_GET["attachment_id"]);
 	$sizes = $metadata['sizes'];
@@ -85,7 +90,7 @@ $current_filename = substr($current_filename, (strrpos($current_filename, "/") +
 	$current_file = wp_get_attachment_url((int) $_GET["attachment_id"]);
 	$current_path = substr($current_file, 0, (strrpos($current_file, "/")));
 	$first_key = key($sizes);
-	//print_r($first_key);
+	//print_r($first_key); //debug
 	$first_thumb = $sizes[$first_key];
 	$first_thumb_name = $first_thumb['file'];
 	$first_url = $current_path.'/'.$first_thumb_name;
@@ -97,22 +102,19 @@ function update_preview_url(sel) {
 	var value = sel.value;  
 	var hrefvalue = "<?php echo ($current_path.'/')?>"+value;  
 	var preview_button = document.getElementById("preview_button");
+	var preview_name = document.getElementById("preview_name");
 	preview_button.setAttribute('href', hrefvalue);
 	preview_button.setAttribute('title', value);
+	preview_name.innerHTML = value;
     return false;
 }
 </script>
+
 <?php endif; ?>
 		
-		<?php if ( apply_filters( 'emr_enable_replace_and_search', true ) ) : ?>
-		<p>
-			<label for="replace_type_3"><input id="replace_type_3" type="radio" name="replace_type" value="replace_and_search"> <?php echo __("Replace the file, use new file name and update links", "enable-media-replace"); ?></label>
-		</p>
-		
-		<?php endif; ?>
-	<?php else : ?>
-		<input type="hidden" name="replace_type" value="replace" />
-	<?php endif; ?>
+<?php else : ?>
+	<input type="hidden" name="replace_type" value="replace" />
+<?php endif; ?>
 	
 		<br/>
 	
@@ -125,11 +127,9 @@ function update_preview_url(sel) {
 	<div class="wp-filter">	
 		<h3><?php echo __("Instructions", "enable-media-replace"); ?></h3>
 		<p class="howto"><b><?php echo __("Replace the file, keep old file name", "enable-media-replace"); ?></b> — <?php echo __("This option requires you to upload a file of the same type (", "enable-media-replace"); ?><?php echo $current_filetype; ?><?php echo __(") as the one you are replacing. The name of the attachment will stay the same (", "enable-media-replace"); ?><?php echo $current_filename; ?><?php echo __(") no matter what the file you upload is named.", "enable-media-replace"); ?></p>
-<?php 
-	if (in_array($suffix, $imgAr)) : 
-?>
-		<p class="howto"><b> <?php echo __("Replace a thumbnail", "enable-media-replace"); ?></b> — <?php echo __("(images only) This option requires you to upload a file of the same type (", "enable-media-replace"); ?><?php echo $current_filetype; ?><?php echo __(") and size as the one you are replacing. The name of the attachment will stay the same no matter what the file you upload is named.", "enable-media-replace"); ?></p>
+		<p class="howto"><b> <?php echo __("Replace the file, use new file name and update links"); ?></b> — <?php echo __("If you select this option, the name and type of the file you upload will replace the old file. All links pointing to the current file (", "enable-media-replace"); ?><?php echo $current_filename; ?><?php echo __(") will be updated to point to the new file name. Please note that only embeds/links to the original size image will be replaced in your posts.", "enable-media-replace"); ?></p>
+<?php if (in_array($suffix, $imgAr)) : ?>
+		<p class="howto"><b> <?php echo __("Replace selected thumbnail only", "enable-media-replace"); ?></b> — <?php echo __("(images only) This option requires you to upload a file of the same type (", "enable-media-replace"); ?><?php echo $current_filetype; ?><?php echo __(") and size as the one you are replacing. The name of the thumbnail will stay the same (", "enable-media-replace"); ?><span id="preview_name"><?php echo $first_thumb_name; ?></span><?php echo __(") no matter what the file you upload is named.", "enable-media-replace"); ?></p>
 <?php endif; ?>
-		<p class="howto"><b> <?php echo __("Replace the file, use new file name and update links"); ?></b> — <?php echo __("If you select this option, the name and type of the file you upload will replace the old file. All links pointing to the current file (", "enable-media-replace"); ?><?php echo $current_filename; ?><?php echo __(") will be updated to point to the new file name. Please note that only embeds/links of the original size image will be replaced in your posts.", "enable-media-replace"); ?></p>
 	</div>
 </div>
