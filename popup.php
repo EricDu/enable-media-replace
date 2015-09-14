@@ -62,18 +62,18 @@ $current_filename = substr($current_filename, (strrpos($current_filename, "/") +
 		<p>
 			<label for="replace_type_2"><input id="replace_type_2" type="radio" name="replace_type" value="replace_thumb"> <?php echo __("Replace a thumbnail", "enable-media-replace"); ?>:</label>
 <?php 
-	//$image_sizes = get_intermediate_image_sizes(); 
 	$metadata = wp_get_attachment_metadata($_GET["attachment_id"]);
 	$sizes = $metadata['sizes'];
 ?>
 		<select name="image_size">
 <?php 
-	foreach ($sizes as $size):
-	$width = $size['width'];
-	$height = $size['height'];
-	$file = $size['file'];
+	foreach ($sizes as $size_name => $size):
+		$width = $size['width'];
+		$height = $size['height'];
+		$file = $size['file'];
+		$mime_type = $size['mime-type'];
 ?>
-    		<option value="<?php echo ($file) ?>"><?php echo ($file) ?></option>
+    		<option value="<?php echo ($file) ?>"><?php echo ($size_name.' : '.$file) ?></option>
 <?php endforeach; ?>
 		</select>
 <?php  
