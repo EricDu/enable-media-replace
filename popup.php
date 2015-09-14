@@ -65,7 +65,7 @@ $current_filename = substr($current_filename, (strrpos($current_filename, "/") +
 	$metadata = wp_get_attachment_metadata($_GET["attachment_id"]);
 	$sizes = $metadata['sizes'];
 ?>
-		<select name="image_size">
+			<select name="image_size" id="image_size" onchange="update_preview_url(this)">
 <?php 
 	foreach ($sizes as $size_name => $size):
 		$width = $size['width'];
@@ -73,14 +73,35 @@ $current_filename = substr($current_filename, (strrpos($current_filename, "/") +
 		$file = $size['file'];
 		$mime_type = $size['mime-type'];
 ?>
-    		<option value="<?php echo ($file) ?>"><?php echo ($size_name.' : '.$file) ?></option>
+    			<option value="<?php echo ($file) ?>"><?php echo ($size_name.' : '.$file) ?></option>
 <?php endforeach; ?>
-		</select>
+			</select>
 <?php  
 	//var_dump( $metadata ); //debug
 	//var_dump( $sizes ); //debug
 ?> 
+<?php 
+	add_thickbox();
+	$current_file = wp_get_attachment_url((int) $_GET["attachment_id"]);
+	$current_path = substr($current_file, 0, (strrpos($current_file, "/")));
+	$first_key = key($sizes);
+	//print_r($first_key);
+	$first_thumb = $sizes[$first_key];
+	$first_thumb_name = $first_thumb['file'];
+	$first_url = $current_path.'/'.$first_thumb_name;
+?>
+			<a href="<?php echo ($first_url) ?>" title="<?php echo ($first_thumb_name) ?>" class="button thickbox" id="preview_button" target="_blank">Preview</a>
 		</p>
+<script>
+function update_preview_url(sel) {
+	var value = sel.value;  
+	var hrefvalue = "<?php echo ($current_path.'/')?>"+value;  
+	var preview_button = document.getElementById("preview_button");
+	preview_button.setAttribute('href', hrefvalue);
+	preview_button.setAttribute('title', value);
+    return false;
+}
+</script>
 <?php endif; ?>
 		
 		<?php if ( apply_filters( 'emr_enable_replace_and_search', true ) ) : ?>
