@@ -9,7 +9,7 @@ $postmeta_table_name = $wpdb->prefix . "postmeta";
 
 function emr_delete_current_files($current_file) {
 	// Delete old file
-
+	do_action( 'emr_delete_file', $current_file );
 	// Find path of current file
 	$current_path = substr($current_file, 0, (strrpos($current_file, "/")));
 	
@@ -34,6 +34,7 @@ function emr_delete_current_files($current_file) {
 	$imgAr = array(".png", ".gif", ".jpg");
 	if (in_array($suffix, $imgAr)) { 
 		// It's a png/gif/jpg based on file name
+		do_action( 'emr_delete_image', $current_file );
 		// Get thumbnail filenames from metadata
 		$metadata = wp_get_attachment_metadata($_POST["ID"]);
 		if (is_array($metadata)) { // Added fix for error messages when there is no metadata (but WHY would there not be? I don't know…)
